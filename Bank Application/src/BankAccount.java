@@ -1,5 +1,17 @@
 
 public class BankAccount {
+	private static int latestAid = 0;
+
+	private BankAccount bankAccount;
+	private int aid;
+
+	private Customer accountOwner;
+
+	private String holderName;
+	private long holderId;
+
+	private double accountAmount;
+
 	/**
 	 * Creates a new bank account for a customer with name and id (personnr). A
 	 * unique account number and has initially 0 kr.
@@ -11,6 +23,9 @@ public class BankAccount {
 	 */
 	public BankAccount(String holderName, long holderId) {
 
+		accountOwner = new Customer(holderName, holderId);
+		this.aid = ++latestAid;
+		accountAmount = 0;
 	}
 
 	/**
@@ -21,44 +36,49 @@ public class BankAccount {
 	 *            The Customer object that contains all data a customer has
 	 */
 	public BankAccount(Customer holder) {
-
+		accountOwner = holder;
 	}
 
 	/**
 	 * @return Customer who owns account
 	 */
 	public Customer getHolder() {
-		return null;
+		return accountOwner;
 	}
 
 	/**
 	 * @return Account's unique number
 	 */
 	public int getAccountNumber() {
-		return 0;
+		return aid;
 	}
 
 	/**
-	 * @return Amount left in account. 
+	 * @return Amount left in account.
 	 */
 	public double getAmount() {
-		return 0;
+		return accountAmount;
 	}
 
 	/**
 	 * Make a monetary deposit to account
-	 * @param amount Amount to be added
+	 * 
+	 * @param amount
+	 *            Amount to be added
 	 */
 	public void deposit(double amount) {
-
+		accountAmount += amount;
 	}
 
 	/**
-	 * Withdraw certain amount from account. If amount is larger than the balance, the balance goes negative.
-	 * @param amount Amount to be withdrawn
+	 * Withdraw certain amount from account. If amount is larger than the
+	 * balance, the balance goes negative.
+	 * 
+	 * @param amount
+	 *            Amount to be withdrawn
 	 */
 	public void withdraw(double amount) {
-
+		accountAmount -= amount;
 	}
 
 	/**
@@ -66,7 +86,7 @@ public class BankAccount {
 	 */
 	@Override
 	public String toString() {
-		return null;
+		return "Customer Name: " + accountOwner.getName() + ", Amount: " + accountAmount;
 	}
 
 }
