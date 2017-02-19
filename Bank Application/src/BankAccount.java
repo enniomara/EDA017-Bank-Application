@@ -86,7 +86,7 @@ public class BankAccount {
 	 */
 	@Override
 	public String toString() {
-		return "Customer Name: " + accountOwner.getName() + ", Amount: " + accountAmount;
+		return "konto " + getAccountNumber() + accountOwner.toString() + ": " + accountAmount;
 	}
 
 }

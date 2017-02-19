@@ -51,6 +51,6 @@ public class Customer {
 	 */
 	@Override
 	public String toString() {
-		return "Uid: " + uid + ", Name: " + name + ", Personnr: " + idNr;
+		return " (" + getName() + ", id " + getIdNr() + ", kundnr: " + getCustomerNr() + ")";
 	}
 }
