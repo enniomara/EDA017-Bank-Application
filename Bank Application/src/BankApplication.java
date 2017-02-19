@@ -1,14 +1,12 @@
-import java.util.List;
-import java.util.Arrays;
 import java.util.Scanner;
-
-import javax.xml.bind.ValidationEvent;
 
 public class BankApplication {
 	Scanner scan;
+	Bank bank;
 
 	public static void main(String[] args) {
 		BankApplication application = new BankApplication();
+
 		application.runApplication();
 	}
 
@@ -18,6 +16,8 @@ public class BankApplication {
 		// Should be using this according to FAQ
 		scan.useDelimiter(System.lineSeparator());
 		// CONFIG - END
+
+		bank = new Bank();
 	}
 
 	/**
@@ -33,6 +33,7 @@ public class BankApplication {
 
 			switch (menuChoice) {
 			case 1:
+				handleFindAccountFromOwner();
 				break;
 			case 2:
 				break;
@@ -58,12 +59,20 @@ public class BankApplication {
 			}
 
 		}
-		// This should run again and again until user closes it. 
+		// This should run again and again until user closes it.
 		while (runAgain);
 
 	}
 
-	
+	private void handleFindAccountFromOwner() {
+		printAction("id: ");
+		long id = scan.nextLong();
+
+		for (BankAccount account : bank.findAccountsForHolder(id)) {
+			System.out.println(account);
+		}
+	}
+
 	private void printMenu() {
 		System.out.println("------------------ ");
 		System.out.println("1. Hitta konto utifrån innehavare" + "\n 2. Sök kontoinnehavare utifrån (del av) namn"
