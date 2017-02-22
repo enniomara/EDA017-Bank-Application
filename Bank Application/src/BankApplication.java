@@ -3,6 +3,7 @@ import java.util.Scanner;
 public class BankApplication {
 	Scanner scan;
 	Bank bank;
+	private boolean shouldRunAgain = true;
 
 	public static void main(String[] args) {
 		BankApplication application = new BankApplication();
@@ -12,7 +13,7 @@ public class BankApplication {
 
 	public BankApplication() {
 		// CONFIG - START
-		Scanner scan = new Scanner(System.in);
+		scan = new Scanner(System.in);
 		// Should be using this according to FAQ
 		scan.useDelimiter(System.lineSeparator());
 		// CONFIG - END
@@ -25,10 +26,10 @@ public class BankApplication {
 	 */
 	private void runApplication() {
 		int menuChoice;
-		boolean runAgain = true;
 		do {
 			printMenu();
 			printAction("val");
+			//scan.nextin
 			menuChoice = scan.nextInt();
 
 			switch (menuChoice) {
@@ -36,22 +37,28 @@ public class BankApplication {
 				handleFindAccountFromOwner();
 				break;
 			case 2:
+				handleSearchAccountOwnerFromPartOfName();
 				break;
 			case 3:
+				handleDepositMoney();
 				break;
 			case 4:
+				handleWithdrawMoney();
 				break;
 			case 5:
+				handleTransfer();
 				break;
 			case 6:
+				handleCreateAccount();
 				break;
 			case 7:
+				handleRemoveAccount();
 				break;
 			case 8:
+				handlePrintAllAccounts();
 				break;
 			case 9:
-				break;
-			case 0:
+				handleCloseApplication();
 				break;
 			default:
 				System.out.println("Skriv ett tal mellan 0 till 9");
@@ -60,7 +67,7 @@ public class BankApplication {
 
 		}
 		// This should run again and again until user closes it.
-		while (runAgain);
+		while (shouldRunAgain);
 
 	}
 
@@ -71,6 +78,93 @@ public class BankApplication {
 		for (BankAccount account : bank.findAccountsForHolder(id)) {
 			System.out.println(account);
 		}
+	}
+
+	private void handleSearchAccountOwnerFromPartOfName() {
+		printAction("namn");
+		String input = scan.nextLine();
+
+		for (Customer customer : bank.findByPartofName(input)) {
+			System.out.println(customer);
+		}
+	}
+
+	private void handleDepositMoney() {
+		printAction("konto");
+		int accountNr = scan.nextInt();
+		printAction("belopp");
+		double amount = scan.nextDouble();
+
+		// Search for the account and then deposit the money
+		BankAccount account = bank.findByNumber(accountNr);
+		account.deposit(amount);
+
+		System.out.println(amount);
+	}
+
+	private void handleWithdrawMoney() {
+		printAction("från konto");
+		int accountNr = scan.nextInt();
+		printAction("belopp");
+		double amount = scan.nextDouble();
+
+		// Search for the account and then deposit the money
+		BankAccount account = bank.findByNumber(accountNr);
+		account.withdraw(amount);
+
+		System.out.println(account);
+
+	}
+
+	private void handleTransfer() {
+		printAction("från konto: ");
+		int fromAccountId = scan.nextInt();
+
+		printAction("till konto");
+		int toAccountId = scan.nextInt();
+
+		printAction("belopp");
+		double amount = scan.nextDouble();
+
+		// Here we transfer the money, it is removed from sender and added to
+		// reciever.
+		BankAccount fromAccount = bank.findByNumber(fromAccountId);
+		BankAccount toAccount = bank.findByNumber(toAccountId);
+		fromAccount.withdraw(amount);
+		toAccount.deposit(amount);
+		System.out.println(fromAccount);
+		System.out.println(toAccount);
+	}
+
+	private void handleCreateAccount() {
+		printAction("namn");
+		String name = scan.nextLine();
+
+		printAction("id");
+		long id = scan.nextLong();
+
+		int accountId = bank.addAccount(name, id);
+
+		System.out.println("konto skapat: " + accountId);
+
+	}
+
+	private void handleRemoveAccount() {
+		printAction("konto");
+		int accountNr = scan.nextInt();
+
+		bank.removeAccount(accountNr);
+	}
+
+	private void handlePrintAllAccounts() {
+		for (BankAccount account : bank.getAllAccounts()) {
+			System.out.println(account);
+		}
+	}
+	
+	private void handleCloseApplication(){
+		// When setting this to false, the while loop run runApplication() will not run again. 
+		shouldRunAgain = false;
 	}
 
 	private void printMenu() {
