@@ -1,11 +1,15 @@
 import java.util.ArrayList;
 
 public class Bank {
+	private ArrayList<Customer> customerList;
+	private ArrayList<BankAccount> accountsList;
+	
 	/**
 	 * Create an empty bank.
 	 */
 	public Bank() {
-
+		customerList = new ArrayList<>();
+		accountsList = new ArrayList<>();
 	}
 
 	/**
@@ -19,7 +23,19 @@ public class Bank {
 	 * @return Account number
 	 */
 	public int addAccount(String holderName, long idNr) {
-		return 0;
+		// Check that there is a user
+		Customer checkCustomer = this.findHolder(idNr);
+		
+		// if findholder return null, it means that there is no customer so it must be created
+		if(checkCustomer == null){
+			checkCustomer = new Customer(holderName, idNr);
+		}
+		
+		BankAccount accountToBeAdded = new BankAccount(checkCustomer);
+		accountsList.add(accountToBeAdded);
+		
+		
+		return accountToBeAdded.getAccountNumber();
 	}
 
 	/**
@@ -31,6 +47,12 @@ public class Bank {
 	 * 
 	 */
 	public Customer findHolder(long idNr) {
+		for (Customer customer : customerList) {
+			if(customer.getIdNr() == idNr){
+				return customer;
+			}
+		}
+		
 		return null;
 	}
 
@@ -42,6 +64,13 @@ public class Bank {
 	 * @return True if successful, otherwise false.
 	 */
 	public boolean removeAccount(int number) {
+		for (int i = 0; i < accountsList.size(); i++) {
+			// If the account in the list matches the account we are looking for
+			if(accountsList.get(i).getAccountNumber() == number){
+				accountsList.remove(i);
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -52,7 +81,19 @@ public class Bank {
 	 * @return List containing all accounts in bank.
 	 */
 	public ArrayList<BankAccount> getAllAccounts() {
-		return null;
+		// https://moodle.cs.lth.se/mod/page/view.php?id=488
+		ArrayList<BankAccount> sortedBankAccountsList = new ArrayList<>();
+
+		for (BankAccount bankAccount : accountsList) {
+			int pos = 0;
+			while (pos < sortedBankAccountsList.size() && sortedBankAccountsList.get(pos).getHolder().getName().compareTo(bankAccount.getHolder().getName()) < 0) {
+				pos++;
+			}
+			sortedBankAccountsList.add(pos, bankAccount);
+		}
+		
+		return sortedBankAccountsList;
+		
 	}
 
 	/**
@@ -63,6 +104,11 @@ public class Bank {
 	 * @return The bank account if found, otherwise null.
 	 */
 	public BankAccount findByNumber(int accountNumber) {
+		for (BankAccount bankAccount : accountsList) {
+			if(bankAccount.getAccountNumber() == accountNumber){
+				return bankAccount;
+			}
+		}
 		return null;
 	}
 
@@ -75,7 +121,13 @@ public class Bank {
 	 * @return List of all accounts owned by customer.
 	 */
 	public ArrayList<BankAccount> findAccountsForHolder(long idNr) {
-		return null;
+		ArrayList<BankAccount> tempBankAccount = new ArrayList<>();
+		for (BankAccount bankAccount : accountsList) {
+			if(bankAccount.getHolder().getIdNr() == idNr){
+				tempBankAccount.add(bankAccount);
+			}
+		}
+		return tempBankAccount;
 	}
 
 	/**
@@ -87,6 +139,14 @@ public class Bank {
 	 * @return A list of all customers that contain namePart in name.
 	 */
 	public ArrayList<Customer> findByPartofName(String namePart) {
-		return null;
+		ArrayList<Customer> foundNameCustomerList = new ArrayList<>();
+		
+		for (Customer customer : customerList) {
+			if(customer.getName().contains(namePart)){
+				foundNameCustomerList.add(customer);
+			}
+		}
+		
+		return foundNameCustomerList;
 	}
 }
