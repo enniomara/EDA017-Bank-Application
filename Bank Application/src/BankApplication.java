@@ -82,7 +82,7 @@ public class BankApplication {
 
 	private void handleSearchAccountOwnerFromPartOfName() {
 		printAction("namn");
-		String input = scan.nextLine();
+		String input = scan.next();
 
 		for (Customer customer : bank.findByPartofName(input)) {
 			System.out.println(customer);
@@ -138,7 +138,7 @@ public class BankApplication {
 
 	private void handleCreateAccount() {
 		printAction("namn");
-		String name = scan.nextLine();
+		String name = scan.next();
 
 		printAction("id");
 		long id = scan.nextLong();
