@@ -10,7 +10,7 @@ public class BankAccount {
 	private String holderName;
 	private long holderId;
 
-	private double accountAmount;
+	private double accountAmount = 0;
 
 	/**
 	 * Creates a new bank account for a customer with name and id (personnr). A
@@ -25,7 +25,7 @@ public class BankAccount {
 
 		accountOwner = new Customer(holderName, holderId);
 		this.aid = ++latestAid;
-		accountAmount = 0;
+		
 	}
 
 	/**
@@ -37,6 +37,7 @@ public class BankAccount {
 	 */
 	public BankAccount(Customer holder) {
 		accountOwner = holder;
+		this.aid = ++latestAid;
 	}
 
 	/**
