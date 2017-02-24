@@ -26,6 +26,9 @@ public class BankApplication {
 	 */
 	private void runApplication() {
 		int menuChoice;
+		int accountNr;
+		String input;
+		double amount;
 		do {
 			printMenu();
 			printAction("val");
@@ -34,28 +37,56 @@ public class BankApplication {
 
 			switch (menuChoice) {
 			case 1:
-				handleFindAccountFromOwner();
+				printAction("id: ");
+				long id = scan.nextLong();
+				System.out.println(handleFindAccountFromOwner(id));
 				break;
 			case 2:
-				handleSearchAccountOwnerFromPartOfName();
+				printAction("namn");
+				input = scan.next();
+				System.out.println(handleSearchAccountOwnerFromPartOfName(input));
 				break;
 			case 3:
-				handleDepositMoney();
+				printAction("konto");
+				accountNr = scan.nextInt();
+				printAction("belopp");
+				amount = scan.nextDouble();
+				
+				System.out.println(handleDepositMoney(accountNr, amount));
 				break;
 			case 4:
-				handleWithdrawMoney();
+				printAction("från konto");
+				accountNr = scan.nextInt();
+				printAction("belopp");
+				amount = scan.nextDouble();
+				System.out.println(handleWithdrawMoney(accountNr, amount));
 				break;
 			case 5:
-				handleTransfer();
+				printAction("från konto: ");
+				int fromAccountId = scan.nextInt();
+
+				printAction("till konto");
+				int toAccountId = scan.nextInt();
+
+				printAction("belopp");
+				amount = scan.nextDouble();
+				System.out.println(handleTransfer(fromAccountId, toAccountId, amount));
 				break;
 			case 6:
-				handleCreateAccount();
+				printAction("namn");
+				String name = scan.next();
+
+				printAction("id");
+				id = scan.nextLong();
+				System.out.println(handleCreateAccount(name, id));
 				break;
 			case 7:
-				handleRemoveAccount();
+				printAction("konto");
+				accountNr = scan.nextInt();
+				handleRemoveAccount(accountNr);
 				break;
 			case 8:
-				handlePrintAllAccounts();
+				System.out.println(handlePrintAllAccounts());
 				break;
 			case 9:
 				handleCloseApplication();
@@ -71,95 +102,77 @@ public class BankApplication {
 
 	}
 
-	private void handleFindAccountFromOwner() {
-		printAction("id: ");
-		long id = scan.nextLong();
+	private String handleFindAccountFromOwner(long id) {
+		StringBuilder returnString = new StringBuilder();
 
 		for (BankAccount account : bank.findAccountsForHolder(id)) {
-			System.out.println(account);
+			returnString.append(account + "\n");
 		}
+		return returnString.toString();
 	}
 
-	private void handleSearchAccountOwnerFromPartOfName() {
-		printAction("namn");
-		String input = scan.next();
+	private String handleSearchAccountOwnerFromPartOfName(String name) {
+		StringBuilder returnString = new StringBuilder();
 
-		for (Customer customer : bank.findByPartofName(input)) {
-			System.out.println(customer);
+		for (Customer customer : bank.findByPartofName(name)) {
+			returnString.append(customer + "\n");
 		}
+		return returnString.toString();
 	}
 
-	private void handleDepositMoney() {
-		printAction("konto");
-		int accountNr = scan.nextInt();
-		printAction("belopp");
-		double amount = scan.nextDouble();
+	private double handleDepositMoney(int accountNr, double amount) {
+		
 
 		// Search for the account and then deposit the money
 		BankAccount account = bank.findByNumber(accountNr);
 		account.deposit(amount);
 
-		System.out.println(amount);
+		return amount;
 	}
 
-	private void handleWithdrawMoney() {
-		printAction("från konto");
-		int accountNr = scan.nextInt();
-		printAction("belopp");
-		double amount = scan.nextDouble();
-
+	private BankAccount handleWithdrawMoney(int accountNr, double amount) {
 		// Search for the account and then deposit the money
 		BankAccount account = bank.findByNumber(accountNr);
 		account.withdraw(amount);
 
-		System.out.println(account);
+		return account;
 
 	}
 
-	private void handleTransfer() {
-		printAction("från konto: ");
-		int fromAccountId = scan.nextInt();
-
-		printAction("till konto");
-		int toAccountId = scan.nextInt();
-
-		printAction("belopp");
-		double amount = scan.nextDouble();
-
+	private String handleTransfer(int fromAccountId, int toAccountId, double amount) {
+		StringBuilder returnString = new StringBuilder();
+		
 		// Here we transfer the money, it is removed from sender and added to
 		// reciever.
 		BankAccount fromAccount = bank.findByNumber(fromAccountId);
 		BankAccount toAccount = bank.findByNumber(toAccountId);
 		fromAccount.withdraw(amount);
 		toAccount.deposit(amount);
-		System.out.println(fromAccount);
-		System.out.println(toAccount);
+		returnString.append(fromAccount.toString() + "\n");
+		returnString.append(toAccount.toString() + "\n");
+		
+		return returnString.toString();
 	}
 
-	private void handleCreateAccount() {
-		printAction("namn");
-		String name = scan.next();
-
-		printAction("id");
-		long id = scan.nextLong();
+	private String handleCreateAccount(String name, long id) {
 
 		int accountId = bank.addAccount(name, id);
 
-		System.out.println("konto skapat: " + accountId);
+		return "konto skapat: " + accountId;
 
 	}
 
-	private void handleRemoveAccount() {
-		printAction("konto");
-		int accountNr = scan.nextInt();
-
+	private void handleRemoveAccount(int accountNr) {
 		bank.removeAccount(accountNr);
 	}
 
-	private void handlePrintAllAccounts() {
+	private String handlePrintAllAccounts() {
+		StringBuilder returnString = new StringBuilder();
 		for (BankAccount account : bank.getAllAccounts()) {
-			System.out.println(account);
+			returnString.append(account.toString() + "\n");
 		}
+		
+		return returnString.toString();
 	}
 	
 	private void handleCloseApplication(){
