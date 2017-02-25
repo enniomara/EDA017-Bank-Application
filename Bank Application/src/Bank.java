@@ -86,7 +86,7 @@ public class Bank {
 
 		for (BankAccount bankAccount : accountsList) {
 			int pos = 0;
-			while (pos < sortedBankAccountsList.size() && sortedBankAccountsList.get(pos).getHolder().getName().compareTo(bankAccount.getHolder().getName()) < 0) {
+			while (pos < sortedBankAccountsList.size() && sortedBankAccountsList.get(pos).getHolder().getName().compareToIgnoreCase(bankAccount.getHolder().getName()) < 0) {
 				pos++;
 			}
 			sortedBankAccountsList.add(pos, bankAccount);
@@ -142,7 +142,7 @@ public class Bank {
 		ArrayList<Customer> foundNameCustomerList = new ArrayList<>();
 		
 		for (Customer customer : customerList) {
-			if(customer.getName().contains(namePart)){
+			if(customer.getName().toLowerCase().contains(namePart)){
 				foundNameCustomerList.add(customer);
 			}
 		}
