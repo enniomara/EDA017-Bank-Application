@@ -29,6 +29,7 @@ public class Bank {
 		// if findholder return null, it means that there is no customer so it must be created
 		if(checkCustomer == null){
 			checkCustomer = new Customer(holderName, idNr);
+			customerList.add(checkCustomer);
 		}
 		
 		BankAccount accountToBeAdded = new BankAccount(checkCustomer);
@@ -142,7 +143,7 @@ public class Bank {
 		ArrayList<Customer> foundNameCustomerList = new ArrayList<>();
 		
 		for (Customer customer : customerList) {
-			if(customer.getName().toLowerCase().contains(namePart)){
+			if(customer.getName().toLowerCase().contains(namePart.toLowerCase())){
 				foundNameCustomerList.add(customer);
 			}
 		}
