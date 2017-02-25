@@ -68,6 +68,10 @@ public class BankAccount {
 	 *            Amount to be added
 	 */
 	public void deposit(double amount) {
+		// Amount must be positive
+		if(amount < 0){
+			throw new IllegalArgumentException("Negative amount: " + amount);
+		}
 		accountAmount += amount;
 	}
 
@@ -79,6 +83,14 @@ public class BankAccount {
 	 *            Amount to be withdrawn
 	 */
 	public void withdraw(double amount) {
+		// Amount must be positive
+		if(amount < 0){
+			throw new IllegalArgumentException("Negative amount: " + amount);
+		}
+		// Amount must not exceed account balance
+		if(getAmount() - amount < 0){
+			throw new IllegalArgumentException("Amount exceeds account balance. Amount given: " + amount);
+		}
 		accountAmount -= amount;
 	}
 

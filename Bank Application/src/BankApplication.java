@@ -51,15 +51,30 @@ public class BankApplication {
 				accountNr = scan.nextInt();
 				printAction("belopp");
 				amount = scan.nextDouble();
+
+				try {
+					System.out.println(handleDepositMoney(accountNr, amount));					
+				} catch (IllegalArgumentException e) {
+					System.out.println("Beloppet måste vara positivt. ");
+				}
+				catch (NullPointerException e) {
+					System.out.println("Var snäll ange ett konto som finns");
+				}
 				
-				System.out.println(handleDepositMoney(accountNr, amount));
+
 				break;
 			case 4:
 				printAction("från konto");
 				accountNr = scan.nextInt();
 				printAction("belopp");
 				amount = scan.nextDouble();
-				System.out.println(handleWithdrawMoney(accountNr, amount));
+				
+				try {
+					System.out.println(handleWithdrawMoney(accountNr, amount));
+				} catch (IllegalArgumentException e) {
+					System.out.println(e.getMessage());
+				}
+				
 				break;
 			case 5:
 				printAction("från konto: ");
@@ -70,7 +85,14 @@ public class BankApplication {
 
 				printAction("belopp");
 				amount = scan.nextDouble();
-				System.out.println(handleTransfer(fromAccountId, toAccountId, amount));
+				
+				try {
+					System.out.println(handleTransfer(fromAccountId, toAccountId, amount));
+				} catch (IllegalArgumentException e) {
+					System.out.println(e.getMessage());
+				}
+				
+				
 				break;
 			case 6:
 				printAction("namn");
@@ -125,7 +147,9 @@ public class BankApplication {
 
 		// Search for the account and then deposit the money
 		BankAccount account = bank.findByNumber(accountNr);
+	
 		account.deposit(amount);
+
 
 		return amount;
 	}
@@ -133,6 +157,12 @@ public class BankApplication {
 	private BankAccount handleWithdrawMoney(int accountNr, double amount) {
 		// Search for the account and then deposit the money
 		BankAccount account = bank.findByNumber(accountNr);
+		
+		// If the account is null, then we cannot withdraw
+		if(account == null){
+			throw new IllegalArgumentException("Accountnr not valid: " + accountNr);
+		}
+		
 		account.withdraw(amount);
 
 		return account;
@@ -141,16 +171,24 @@ public class BankApplication {
 
 	private String handleTransfer(int fromAccountId, int toAccountId, double amount) {
 		StringBuilder returnString = new StringBuilder();
-		
+
 		// Here we transfer the money, it is removed from sender and added to
 		// reciever.
 		BankAccount fromAccount = bank.findByNumber(fromAccountId);
+		if(fromAccount == null){
+			throw new IllegalArgumentException("Sending account is not valid: " + fromAccountId);
+		}
+		
 		BankAccount toAccount = bank.findByNumber(toAccountId);
+		if(toAccount == null){
+			throw new IllegalArgumentException("Recieveing account is not valid: " + toAccountId);
+		}
+		
 		fromAccount.withdraw(amount);
 		toAccount.deposit(amount);
 		returnString.append(fromAccount.toString() + "\n");
 		returnString.append(toAccount.toString() + "\n");
-		
+
 		return returnString.toString();
 	}
 
