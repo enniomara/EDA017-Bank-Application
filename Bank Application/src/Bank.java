@@ -132,7 +132,7 @@ public class Bank {
 	}
 
 	/**
-	 * Runs a case insensitive search of all customers whose name contains
+	 * Runs a case insensitive search in accountList of all customers whose name contains
 	 * namePart.
 	 * 
 	 * @param namePart
@@ -142,9 +142,9 @@ public class Bank {
 	public ArrayList<Customer> findByPartofName(String namePart) {
 		ArrayList<Customer> foundNameCustomerList = new ArrayList<>();
 		
-		for (Customer customer : customerList) {
-			if(customer.getName().toLowerCase().contains(namePart.toLowerCase())){
-				foundNameCustomerList.add(customer);
+		for (BankAccount account : accountsList) {
+			if(account.getHolder().getName().toLowerCase().contains(namePart.toLowerCase())){
+				foundNameCustomerList.add(account.getHolder());
 			}
 		}
 		
