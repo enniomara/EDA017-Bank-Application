@@ -32,12 +32,11 @@ public class BankApplication {
 		do {
 			printMenu();
 			printAction("val");
-			//scan.nextin
 			menuChoice = scan.nextInt();
 
 			switch (menuChoice) {
 			case 1:
-				printAction("id: ");
+				printAction("id");
 				long id = scan.nextLong();
 				System.out.println(handleFindAccountFromOwner(id));
 				break;
@@ -53,14 +52,12 @@ public class BankApplication {
 				amount = scan.nextDouble();
 
 				try {
-					System.out.println(handleDepositMoney(accountNr, amount));					
+					System.out.println(handleDepositMoney(accountNr, amount));
 				} catch (IllegalArgumentException e) {
 					System.out.println("Beloppet måste vara positivt. ");
-				}
-				catch (NullPointerException e) {
+				} catch (NullPointerException e) {
 					System.out.println("Var snäll ange ett konto som finns");
 				}
-				
 
 				break;
 			case 4:
@@ -68,16 +65,16 @@ public class BankApplication {
 				accountNr = scan.nextInt();
 				printAction("belopp");
 				amount = scan.nextDouble();
-				
+
 				try {
 					System.out.println(handleWithdrawMoney(accountNr, amount));
 				} catch (IllegalArgumentException e) {
 					System.out.println(e.getMessage());
 				}
-				
+
 				break;
 			case 5:
-				printAction("från konto: ");
+				printAction("från konto");
 				int fromAccountId = scan.nextInt();
 
 				printAction("till konto");
@@ -85,14 +82,13 @@ public class BankApplication {
 
 				printAction("belopp");
 				amount = scan.nextDouble();
-				
+
 				try {
 					System.out.println(handleTransfer(fromAccountId, toAccountId, amount));
 				} catch (IllegalArgumentException e) {
 					System.out.println(e.getMessage());
 				}
-				
-				
+
 				break;
 			case 6:
 				printAction("namn");
@@ -143,13 +139,11 @@ public class BankApplication {
 	}
 
 	private double handleDepositMoney(int accountNr, double amount) {
-		
 
 		// Search for the account and then deposit the money
 		BankAccount account = bank.findByNumber(accountNr);
-	
-		account.deposit(amount);
 
+		account.deposit(amount);
 
 		return amount;
 	}
@@ -157,12 +151,12 @@ public class BankApplication {
 	private BankAccount handleWithdrawMoney(int accountNr, double amount) {
 		// Search for the account and then deposit the money
 		BankAccount account = bank.findByNumber(accountNr);
-		
+
 		// If the account is null, then we cannot withdraw
-		if(account == null){
+		if (account == null) {
 			throw new IllegalArgumentException("Accountnr not valid: " + accountNr);
 		}
-		
+
 		account.withdraw(amount);
 
 		return account;
@@ -175,15 +169,15 @@ public class BankApplication {
 		// Here we transfer the money, it is removed from sender and added to
 		// reciever.
 		BankAccount fromAccount = bank.findByNumber(fromAccountId);
-		if(fromAccount == null){
+		if (fromAccount == null) {
 			throw new IllegalArgumentException("Sending account is not valid: " + fromAccountId);
 		}
-		
+
 		BankAccount toAccount = bank.findByNumber(toAccountId);
-		if(toAccount == null){
+		if (toAccount == null) {
 			throw new IllegalArgumentException("Recieveing account is not valid: " + toAccountId);
 		}
-		
+
 		fromAccount.withdraw(amount);
 		toAccount.deposit(amount);
 		returnString.append(fromAccount.toString() + "\n");
@@ -209,12 +203,13 @@ public class BankApplication {
 		for (BankAccount account : bank.getAllAccounts()) {
 			returnString.append(account.toString() + "\n");
 		}
-		
+
 		return returnString.toString();
 	}
-	
-	private void handleCloseApplication(){
-		// When setting this to false, the while loop run runApplication() will not run again. 
+
+	private void handleCloseApplication() {
+		// When setting this to false, the while loop run runApplication() will
+		// not run again.
 		shouldRunAgain = false;
 	}
 
@@ -234,14 +229,5 @@ public class BankApplication {
 	 */
 	private void printAction(String action) {
 		System.out.println(action + ": ");
-	}
-
-	/**
-	 * Wrapper for next line scan on scanner.
-	 * 
-	 * @return The input that user sent in.
-	 */
-	private String scanNextLine() {
-		return scan.nextLine().trim();
 	}
 }

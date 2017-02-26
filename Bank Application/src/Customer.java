@@ -4,7 +4,7 @@
  *
  */
 public class Customer {
-	private static int latestUid = 0;
+	private static int latestUid = 1000;
 
 	private String name;
 	private long idNr;

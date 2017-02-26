@@ -2,13 +2,9 @@
 public class BankAccount {
 	private static int latestAid = 0;
 
-	private BankAccount bankAccount;
 	private int aid;
 
 	private Customer accountOwner;
-
-	private String holderName;
-	private long holderId;
 
 	private double accountAmount = 0;
 
